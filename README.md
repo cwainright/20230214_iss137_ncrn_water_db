@@ -1,1 +1,1 @@
-# A repo that addresses [ticket 139](https://github.com/orgs/NCRN/projects/6/views/8?pane=issue&itemId=20383304)
+# A repo that addresses [ticket 138](https://github.com/orgs/NCRN/projects/6/views/8?pane=issue&itemId=20383066) and [ticket 139](https://github.com/orgs/NCRN/projects/6/views/8?pane=issue&itemId=20383304)
