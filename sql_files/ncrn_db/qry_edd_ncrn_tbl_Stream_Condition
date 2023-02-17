@@ -1,6 +1,6 @@
 SELECT 
   "NCRN" AS Org_Code, 
-  foo.Core_Data_ID AS Activity_ID, 
+  foo.Stream_Cond_ID AS Activity_ID, 
   "Perennial stream water monitoring" AS Characteristic_Name, 
   foo.Variable AS Method_Speciation, 
   "" AS Filtered_Fraction, 
@@ -86,113 +86,77 @@ SELECT
   "" AS Taxonomist_Accreditation_Authority_Name, 
   "" AS Result_File_Name 
 FROM 
-  tbl_Core_Water_Data 
+  tbl_Stream_Condition 
   LEFT JOIN (
     SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "pH" AS Variable, 
-      tbl_Core_Water_Data.pH AS val, 
-      "pH" AS unit 
+      tbl_Stream_Condition.Stream_Cond_ID, 
+      tbl_Stream_Condition.Event_ID, 
+      "Algae_Cover" AS Variable, 
+      tbl_Stream_Condition.Algae_Cover AS val, 
+      "Percent algae cover on stream substrate" AS unit 
     FROM 
-      tbl_Core_Water_Data 
+      tbl_Stream_Condition 
     UNION ALL 
     SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "Percent_DO" AS Variable, 
-      tbl_Core_Water_Data.Percent_DO AS val, 
-      "percent" AS unit 
+      tbl_Stream_Condition.Stream_Cond_ID, 
+      tbl_Stream_Condition.Event_ID, 
+      "Algae_Appearance" AS Variable, 
+      tbl_Stream_Condition.Algae_Appearance AS val, 
+      "Appearance of the algae" AS unit 
     FROM 
-      tbl_Core_Water_Data 
+      tbl_Stream_Condition 
     UNION ALL 
     SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "DO" AS Variable, 
-      tbl_Core_Water_Data.DO AS val, 
-      "mg/L" AS unit 
+      tbl_Stream_Condition.Stream_Cond_ID, 
+      tbl_Stream_Condition.Event_ID, 
+      "Stream_Condition" AS Variable, 
+      tbl_Stream_Condition.Stream_Condition AS val, 
+      "Condition of stream and water clarity" AS unit 
     FROM 
-      tbl_Core_Water_Data 
+      tbl_Stream_Condition 
     UNION ALL 
     SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "Salinity" AS Variable, 
-      tbl_Core_Water_Data.Salinity AS val, 
-      "ppt" AS unit 
+      tbl_Stream_Condition.Stream_Cond_ID, 
+      tbl_Stream_Condition.Event_ID, 
+      "Wetted_Width" AS Variable, 
+      tbl_Stream_Condition.Wetted_Width AS val, 
+      "feet" AS unit 
     FROM 
-      tbl_Core_Water_Data 
+      tbl_Stream_Condition 
     UNION ALL 
     SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "Water_Temp" AS Variable, 
-      tbl_Core_Water_Data.Water_Temp AS val, 
-      "celsius" AS unit 
+      tbl_Stream_Condition.Stream_Cond_ID, 
+      tbl_Stream_Condition.Event_ID, 
+      "Discharge" AS Variable, 
+      tbl_Stream_Condition.Discharge AS val, 
+      "cubic feet per second" AS unit 
     FROM 
-      tbl_Core_Water_Data 
+      tbl_Stream_Condition 
     UNION ALL 
     SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "Spec_Conductance" AS Variable, 
-      tbl_Core_Water_Data.Spec_Conductance AS val, 
-      "uS/cm: microsiemens per centimeter" AS unit 
+      tbl_Stream_Condition.Stream_Cond_ID, 
+      tbl_Stream_Condition.Event_ID, 
+      "Flow_Condition" AS Variable, 
+      tbl_Stream_Condition.Flow_Condition AS val, 
+      "qualitative estimation of creek stage relative to normal" AS unit 
     FROM 
-      tbl_Core_Water_Data 
+      tbl_Stream_Condition 
     UNION ALL 
     SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "Spec_Conductance" AS Variable, 
-      tbl_Core_Water_Data.Spec_Conductance AS val, 
-      "uS/cm: microsiemens per centimeter" AS unit 
+      tbl_Stream_Condition.Stream_Cond_ID, 
+      tbl_Stream_Condition.Event_ID, 
+      "Depth" AS Variable, 
+      tbl_Stream_Condition.Depth AS val, 
+      "feet" AS unit 
     FROM 
-      tbl_Core_Water_Data 
+      tbl_Stream_Condition 
     UNION ALL 
     SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "Conductivity" AS Variable, 
-      tbl_Core_Water_Data.Conductivity AS val, 
-      "uohms/cm: microohms per centimeter" AS unit 
+      tbl_Stream_Condition.Stream_Cond_ID, 
+      tbl_Stream_Condition.Event_ID, 
+      "Flow" AS Variable, 
+      tbl_Stream_Condition.Flow AS val, 
+      "feet per second" AS unit 
     FROM 
-      tbl_Core_Water_Data 
-    UNION ALL 
-    SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "TDS" AS Variable, 
-      tbl_Core_Water_Data.TDS AS val, 
-      "mg/L" AS unit 
-    FROM 
-      tbl_Core_Water_Data 
-    UNION ALL 
-    SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "Barometric pressure" AS Variable, 
-      tbl_Core_Water_Data.Air_Pressure AS val, 
-      "mm Hg" AS unit 
-    FROM 
-      tbl_Core_Water_Data 
-    UNION ALL 
-    SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "Distance increment where measurements are taken from right bank" AS Variable, 
-      tbl_Core_Water_Data.Samp_Comp_Order AS val, 
-      "meter" AS unit 
-    FROM 
-      tbl_Core_Water_Data 
-    UNION ALL 
-    SELECT 
-      tbl_Core_Water_Data.Core_Data_ID, 
-      tbl_Core_Water_Data.Event_ID, 
-      "Description of sequential increment from right bank" AS Variable, 
-      tbl_Core_Water_Data.Samp_Increment AS val, 
-      "Sample order" AS unit 
-    FROM 
-      tbl_Core_Water_Data
-  ) AS foo ON tbl_Core_Water_Data.Core_Data_ID = foo.Core_Data_ID;
+      tbl_Stream_Condition
+  ) AS foo ON tbl_Stream_Condition.Stream_Cond_ID = foo.Stream_Cond_ID;
