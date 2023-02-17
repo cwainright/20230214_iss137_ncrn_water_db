@@ -1,5 +1,4 @@
-SELECT
-  TOP 50
+SELECT 
   "NCRN" AS Org_Code, 
   "Perennial stream water monitoring" AS Project_ID, 
   tbl_Events.Location_ID, 
@@ -49,7 +48,7 @@ SELECT
   "" AS Reach_Length, 
   "" AS Reach_Length_Unit, 
   "" AS Reach_Width, 
-  "" AS [Reach_Width_Unit], 
+  "" AS Reach_Width_Unit, 
   "" AS Pass_Count, 
   "" AS Net_Type, 
   "" AS Net_Surface_Area, 
