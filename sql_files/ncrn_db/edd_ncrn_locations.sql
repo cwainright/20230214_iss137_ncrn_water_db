@@ -1,7 +1,7 @@
 SELECT 
   "NCRN" AS Org_Code, 
   tbl_Locations.Unit_Code AS Park_Code, 
-  tbl_Locations.Location_ID, 
+  tbl_Locations.Loc_Code AS Location_ID, 
   tbl_Locations.Loc_Name AS Location_Name, 
   tbl_Locations.Loc_Type AS Location_Type, 
   tbl_Locations.Lat_DD AS Latitude, 
@@ -17,7 +17,7 @@ SELECT
   "" AS Establishment_Date, 
   tbl_Locations.HUC AS HUC8_Code, 
   "" AS HUC12_Code, 
-  tbl_Locations.Loc_Code AS Alternate_Location_ID, 
+  tbl_Locations.Location_ID AS Alternate_Location_ID, 
   "" AS Alternate_Location_ID_Context, 
   "" AS Elevation, 
   "" AS Elevation_Unit, 
