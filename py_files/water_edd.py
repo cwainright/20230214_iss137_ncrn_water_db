@@ -12,10 +12,10 @@ locations_ncrn = pd.read_sql_query("EXEC qry_edd_locations", conn)
 conn.close()
 
 # execute npstoret queries
-conn = pyodbc.connect(r'Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\Users\cwainright\OneDrive - DOI\Documents\data_projects\2023\20230214_iss138_iss139_ncrn_npstoret_water\data\NCRN_NPSTORET_BE_20230216.mdb;')
+conn = pyodbc.connect(r'Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\Users\cwainright\OneDrive - DOI\Documents\data_projects\2023\20230214_iss138_iss139_ncrn_npstoret_water\data\NCRN_NPSTORET_BE_20230213.mdb;')
 results_npstoret = pd.read_sql_query("EXEC qry_edd_npstoret_results", conn)
 actvities_npstoret = pd.read_sql_query("EXEC qry_edd_npstoret_activities", conn)
-locations_npstoret = pd.read_sql_query("EXEC qry_edd_npstoret_locations", conn)
+locations_npstoret = pd.read_sql_query("EXEC qry_edd_npstoret_locations", con = conn)
 conn.close()
 
 # append results
