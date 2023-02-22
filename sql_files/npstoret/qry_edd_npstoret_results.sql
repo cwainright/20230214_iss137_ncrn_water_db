@@ -1,9 +1,9 @@
 SELECT 
-  tblResults.LocRSULT_ORG_ID, 
-  tblActivities.ID_CODE AS Activity_ID,
+  tblResults.LocRSULT_ORG_ID AS Org_Code, 
+  tblActivities.ID_CODE AS Activity_ID, 
   'Perennial stream water monitoring' AS Characteristic_Name, 
   tblCharacteristics.DISPLAY_NAME AS Method_Speciation, 
-  '' AS Filtered_Fraction, 
+  tblCharacteristics.SMPL_FRAC_TYPE_NM AS Filtered_Fraction, 
   '' AS Result_Detection_Condition, 
   tblResults.RESULT_TEXT AS Result_Text, 
   "" AS Result_Unit, 
@@ -32,7 +32,9 @@ SELECT
   tblResults.LAB_REMARKS AS Analytical_Remark, 
   tblCharacteristics.FIELD_LAB AS Lab_ID, 
   '' AS Lab_Remark_Code, 
-  '' AS Analysis_Start_Time_Zone, 
+  tblResults.Analysis_Date AS Analysis_Start_Date, 
+  tblResults.Analysis_Time AS Analysis_Start_Time, 
+  tblResults.Analysis_Time_Zone AS Analysis_Start_Time_Zone, 
   '' AS Lab_Accreditation_Indicator, 
   '' AS Lab_Accreditation_Authority_Name, 
   '' AS Lab_Batch_ID, 
@@ -86,18 +88,18 @@ SELECT
   '' AS Taxonomist_Accreditation_Authority_Name, 
   tblResults.[File Name] AS Result_File_Name 
 FROM 
-  tblActivities 
-  RIGHT JOIN (
-    tblCharacteristics 
-    RIGHT JOIN tblResults ON (
-      tblCharacteristics.LocCHDEF_ORG_ID = tblResults.LocChDef_Org_ID
+  tblCharacteristics 
+  INNER JOIN (
+    tblActivities 
+    INNER JOIN tblResults ON (
+      tblActivities.LocFdAct_IS_NUMBER = tblResults.LocFdAct_IS_NUMBER
     ) 
     AND (
-      tblCharacteristics.LocCHDEF_IS_NUMBER = tblResults.LocChDef_IS_NUMBER
+      tblActivities.LocFdAct_ORG_ID = tblResults.LocFdAct_Org_ID
     )
   ) ON (
-    tblActivities.LocFdAct_ORG_ID = tblResults.LocFdAct_Org_ID
+    tblCharacteristics.LocCHDEF_IS_NUMBER = tblResults.LocChDef_IS_NUMBER
   ) 
   AND (
-    tblActivities.LocFdAct_IS_NUMBER = tblResults.LocFdAct_IS_NUMBER
+    tblCharacteristics.LocCHDEF_ORG_ID = tblResults.LocChDef_Org_ID
   );
