@@ -4,7 +4,7 @@ SELECT
   tblLocations.StationID AS Location_ID, 
   tblActivities.ID_CODE AS Activity_ID, 
   "Field Msr/Obs" AS Activity_Type, 
-  "Water" AS Medium, 
+  tblCharacteristics.MEDIUM AS Medium, 
   "" AS Medium_Subdivision, 
   "" AS Assemblage_Sampled_Name, 
   tblVisits.START_DATE AS Activity_Start_Date, 
@@ -30,13 +30,13 @@ SELECT
   "" AS Collection_Equipment_Name, 
   "" AS Collection_Equipment_Description, 
   "" AS Gear_Deployment, 
-  "" AS Container_Type, 
-  "" AS Container_Color, 
-  "" AS Container_Size, 
-  "" AS Container_Size_Unit, 
+  tblPreserveTransportStore.CONTAINER_TYPE_NM AS Container_Type, 
+  tblPreserveTransportStore.CONTAINER_COLOR AS Container_Color, 
+  tblPreserveTransportStore.CONTAINER_SIZE_MSR AS Container_Size, 
+  tblPreserveTransportStore.CONTAINER_SIZE_UN AS Container_Size_Unit, 
   "version 2; protocol date 2009-06-30" AS Preparation_Method_ID, 
-  "" AS Chemical_Preservative, 
-  "" AS Thermal_Preservative, 
+  tblPreserveTransportStore.CHEM_PRESRV_TYPE AS Chemical_Preservative, 
+  tblPreserveTransportStore.TEMP_PRESRV_TYPE AS Thermal_Preservative, 
   "" AS Transport_Storage_Description, 
   "" AS Activity_Group_ID, 
   tblLocations.StationID AS Activity_Group_Name, 
@@ -63,18 +63,42 @@ SELECT
   "" AS Effort, 
   "" AS Effort_Unit 
 FROM 
-  tblLocations 
-  RIGHT JOIN (
-    tblVisits 
-    RIGHT JOIN tblActivities ON (
-      tblVisits.LocStVst_ORG_ID = tblActivities.LocStVst_ORG_ID
+  tblPreserveTransportStore 
+  INNER JOIN (
+    tblCharacteristics 
+    INNER JOIN (
+      (
+        (
+          tblLocations 
+          INNER JOIN tblVisits ON (
+            tblLocations.LocSTATN_ORG_ID = tblVisits.LocSTATN_ORG_ID
+          ) 
+          AND (
+            tblLocations.LocSTATN_IS_NUMBER = tblVisits.LocSTATN_IS_NUMBER
+          )
+        ) 
+        INNER JOIN tblActivities ON (
+          tblVisits.LocStVst_ORG_ID = tblActivities.LocStVst_ORG_ID
+        ) 
+        AND (
+          tblVisits.LocStVst_IS_NUMBER = tblActivities.LocStVst_IS_NUMBER
+        )
+      ) 
+      INNER JOIN tblResults ON (
+        tblActivities.LocFdAct_ORG_ID = tblResults.LocFdAct_Org_ID
+      ) 
+      AND (
+        tblActivities.LocFdAct_IS_NUMBER = tblResults.LocFdAct_IS_NUMBER
+      )
+    ) ON (
+      tblCharacteristics.LocCHDEF_ORG_ID = tblResults.LocChDef_Org_ID
     ) 
     AND (
-      tblVisits.LocStVst_IS_NUMBER = tblActivities.LocStVst_IS_NUMBER
+      tblCharacteristics.LocCHDEF_IS_NUMBER = tblResults.LocChDef_IS_NUMBER
     )
   ) ON (
-    tblLocations.LocSTATN_ORG_ID = tblVisits.LocSTATN_ORG_ID
+    tblPreserveTransportStore.LocSDP_ORG_ID = tblCharacteristics.LocSDP_ORG_ID
   ) 
   AND (
-    tblLocations.LocSTATN_IS_NUMBER = tblVisits.LocSTATN_IS_NUMBER
+    tblPreserveTransportStore.LocSDP_IS_NUMBER = tblCharacteristics.LocSDP_IS_NUMBER
   );
