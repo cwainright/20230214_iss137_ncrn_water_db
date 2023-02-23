@@ -6,7 +6,7 @@ SELECT
   tblCharacteristics.SMPL_FRAC_TYPE_NM AS Filtered_Fraction, 
   '' AS Result_Detection_Condition, 
   tblResults.RESULT_TEXT AS Result_Text, 
-  "" AS Result_Unit, 
+  tblCharacteristics.TSRUOM_IS_NUMBER AS Result_Unit, 
   tblResults.MEASURE_QUALIFIER AS Result_Qualifier, 
   tblResults.VALUE_STATUS AS Result_Status, 
   tblResults.VALUE_TYPE AS Result_Type, 
@@ -92,14 +92,14 @@ FROM
   INNER JOIN (
     tblActivities 
     INNER JOIN tblResults ON (
-      tblActivities.LocFdAct_IS_NUMBER = tblResults.LocFdAct_IS_NUMBER
+      tblActivities.LocFdAct_ORG_ID = tblResults.LocFdAct_Org_ID
     ) 
     AND (
-      tblActivities.LocFdAct_ORG_ID = tblResults.LocFdAct_Org_ID
+      tblActivities.LocFdAct_IS_NUMBER = tblResults.LocFdAct_IS_NUMBER
     )
   ) ON (
-    tblCharacteristics.LocCHDEF_IS_NUMBER = tblResults.LocChDef_IS_NUMBER
+    tblCharacteristics.LocCHDEF_ORG_ID = tblResults.LocChDef_Org_ID
   ) 
   AND (
-    tblCharacteristics.LocCHDEF_ORG_ID = tblResults.LocChDef_Org_ID
+    tblCharacteristics.LocCHDEF_IS_NUMBER = tblResults.LocChDef_IS_NUMBER
   );
