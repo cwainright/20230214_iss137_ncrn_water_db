@@ -35,7 +35,7 @@ activities = pd.DataFrame().append(actvities_ncrn).append(actvities_npstoret)
 locations = pd.DataFrame().append(locations_ncrn).append(locations_npstoret)
 
 # write excel file
-with pd.ExcelWriter('data/test_edd.xlsx') as writer:
+with pd.ExcelWriter('C:/Users/cwainright/OneDrive - DOI/Desktop/water_edd.xlsx') as writer:
     results.to_excel(writer, sheet_name='Results', index=False)
     activities.to_excel(writer, sheet_name='Activities', index=False)
     locations.to_excel(writer, sheet_name='Locations', index=False)

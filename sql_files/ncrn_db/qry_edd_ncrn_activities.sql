@@ -1,7 +1,7 @@
 SELECT 
   "NCRN" AS Org_Code, 
   "Perennial stream water monitoring" AS Project_ID, 
-  tbl_Events.Location_ID, 
+  tbl_Locations.Loc_Code AS Location_ID, 
   tbl_Events.Event_ID AS Activity_ID, 
   "Field Msr/Obs" AS Activity_Type, 
   "Water" AS Medium, 
