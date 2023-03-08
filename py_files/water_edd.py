@@ -2,6 +2,16 @@ import pyodbc
 import pandas as pd
 import numpy as np
 import openpyxl
+import nutrient_edd # project module in 'py_files\nutrient_edd.py'
+from importlib import reload
+reload(nutrient_edd)
+
+# add 'py_files' to sys.path if not already present
+if 'py_files' not in sys.path: # lets python search for 'nutrient_edd.py' in child directory 'py_files'
+    sys.path.append('py_files') # https://stackoverflow.com/questions/24868733/how-to-access-a-module-from-outside-your-file-folder-in-python
+    print('`py_files` appended to sys.path')
+else:
+    print('`py_files` already in sys.path')
 
 # execute ncrn queries
 conn = pyodbc.connect(r'Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\Users\cwainright\OneDrive - DOI\Documents\data_projects\2023\20230214_iss138_iss139_ncrn_npstoret_water\data\NCRN_Water_Field_Data_BE_Ver_20230203_1514.accdb;')
@@ -28,6 +38,11 @@ conn.close()
 results_npstoret = pd.merge(results_npstoret, npstoret_units, left_on='Result_Unit', right_on='TSRUOM_IS_NUMBER', how="left")
 results_npstoret.Result_Unit = results_npstoret.TSRUOM_IS_NUMBER
 results_npstoret = results_npstoret.drop(labels="TSRUOM_IS_NUMBER", axis=1)
+
+# execute nutrients
+template = 'data/edd_template.xlsx'
+nutrients = 'data/NCRN_Water_New_Nutrient_Data.xlsx' # https://doimspp.sharepoint.com/:f:/r/sites/NCRNWater/Shared%20Documents/General/Annual-Data-Packages/2022?csf=1&web=1&e=37uxYh
+mynutrients = nutrient_edd.Edd(template_filepath = template, source_filepath = nutrients)
 
 # append results
 results = pd.DataFrame().append(results_ncrn_anc).append(results_ncrn_stream).append(results_ncrn_water).append(results_npstoret)
