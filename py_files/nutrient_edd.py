@@ -58,6 +58,7 @@ class Edd():
             self.template_locations = pd.read_excel(template_filepath, sheet_name = 'Locations')
             self.template_activities = pd.read_excel(template_filepath, sheet_name = 'Activities')
             self.nutrients = pd.read_excel(source_filepath)
+            self.loc_lookup = pd.read_excel('data/locations_lookup.xlsx')
             self.edd_results = self._get_results()
             self.edd_locations = self._get_locations()
             self.edd_activities = self._get_activities()
@@ -73,7 +74,22 @@ class Edd():
         '''Parse `source` nutrients xlsx into EDD results.'''
         
         # protected method, not intended to be called directly
-        pass
+        
+        # process data into 
+        df = self.nutrients.copy()
+        df["dummy"] = df["Source File"] + ';' + df["Sample ID"] + ';' + df["Sample Date"].astype(str) + ';' + df["Parameter"]
+        df = df.drop_duplicates('dummy')
+        df["Comments"] = df["Comments"].astype(str) + df["Comment Description"].astype(str)
+        df["Location_ID"] = df["Sample ID"].replace('_DUP', '', regex = True)
+        df = pd.merge(df, self.loc_lookup, how = 'left', on = 'Location_ID') # left-join
+        
+        edd_results = pd.DataFrame(columns = self.template_results.columns, index = range(df.shape[0])) # empty df to receive data
+        
+        
+        
+        
+        return edd_results
+        # pass
         
         
     def _get_locations(self):
