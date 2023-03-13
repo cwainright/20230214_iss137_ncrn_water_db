@@ -75,22 +75,32 @@ class Edd():
         
         # protected method, not intended to be called directly
         
-        # process data into 
+        # process data into flat form where one row is one 'result'
         df = self.nutrients.copy()
         df["dummy"] = df["Source File"] + ';' + df["Sample ID"] + ';' + df["Sample Date"].astype(str) + ';' + df["Parameter"]
-        df = df.drop_duplicates('dummy')
+        df = df.drop_duplicates('dummy') # duplicate `dummy` values are true duplicate records; same exact values for all fields
         df["Comments"] = df["Comments"].astype(str) + df["Comment Description"].astype(str)
         df["Location_ID"] = df["Sample ID"].replace('_DUP', '', regex = True)
         df = pd.merge(df, self.loc_lookup, how = 'left', on = 'Location_ID') # left-join
         
+        # fill processed data into template
         edd_results = pd.DataFrame(columns = self.template_results.columns, index = range(df.shape[0])) # empty df to receive data
-        
-        
-        
+        edd_results["#Org_Code"] = 'NCRN'
+        edd_results["Activity_ID"] = df["dummy"]
+        edd_results["Characteristic_Name"] = 'Perennial stream water monitoring'
+        edd_results["Method_Speciation"] = df["Parameter"]
+        edd_results["Result_Text"] = df["Result"]
+        edd_results["Result_Unit"] = df["Unit"]
+        edd_results["Result_Status"] = 'Final'
+        edd_results["Result_Type"] = 'Actual'
+        edd_results["Result_Comment"] = df["Comments"]
+        edd_results["Result_Sampling_Point_Name"] = df["Location_Name"]
+        edd_results["Analysis_Start_Date"] = df["Analysis Date"].dt.strftime('%Y-%m-%d')
+        edd_results["Analysis_Start_Time_Zone"] = 'Eastern Time - Washington, DC'
+
+        edd_results = edd_results.fillna('')
         
         return edd_results
-        # pass
-        
         
     def _get_locations(self):
         '''Parse `source` nutrients xlsx into EDD locations.'''
