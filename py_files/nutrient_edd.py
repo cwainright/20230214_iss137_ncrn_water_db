@@ -107,7 +107,7 @@ class Edd():
         
         # protected method, not intended to be called directly
         
-        # process data into flat form where one row is one 'result'
+        # process data into flat form where one row is one 'location'
         df = self.nutrients.copy()
         df["Location_ID"] = df["Sample ID"].replace('_DUP', '', regex = True) # get rid of the _DUP suffix so we can match on location ID
         df["park_code"] = df["Location_ID"].str[5:9]
@@ -160,6 +160,31 @@ class Edd():
         '''Parse `source` nutrients xlsx into EDD activite.'''
         
         # protected method, not intended to be called directly
-        pass
+        
+        # process data into flat form where one row is one 'activity'
+        df = self.nutrients.copy()
+        df["Location_ID"] = df["Sample ID"].replace('_DUP', '', regex = True) # get rid of the _DUP suffix so we can match on location ID
+        df["dummy"] = df["Source File"] + ';' + df["Sample ID"] + ';' + df["Sample Date"].astype(str)
+        df = df.drop_duplicates('dummy')
+        df = pd.merge(df, self.loc_lookup, how = 'left', on = 'Location_ID') # left-join
+        
+        # fill processed data into template
+        edd = pd.DataFrame(columns = self.template_activities.columns)
+        edd["#Org_Code"] = df["Location_ID"][:4]
+        edd["Project_ID"] = 'Perennial stream water monitoring'
+        edd["Location_ID"] = df["Location_ID"]
+        edd["Activity_ID"] = df["dummy"]
+        edd["Activity_Type"] = 'Field Msr/Obs'
+        edd["Medium"] = 'Water'
+        edd["Activity_Start_Date"] = df["Sample Date"]
+        edd["Activity_Start_Time_Zone"] = 'Eastern Time - Washington, DC'
+        edd["Additional_Location_Info"] = df["Location_Name"]
+        edd["Custody_ID"] = 'Analyst id: ' + df["Analyst"]
+        edd["Preparation_Method_ID"] = df["Method"]
+        edd["Activity_Group_Name"] = df["Location_ID"]
+        
+        edd = edd.fillna('')
+        
+        return edd
     
     
