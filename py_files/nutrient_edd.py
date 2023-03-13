@@ -50,13 +50,14 @@ class Edd():
         assert source_filepath.lower().endswith(".xlsx"), bcolors.FAIL + "`source_filepath` must end with '.xlsx'"
         
         # static assets
-        template_results = pd.read_excel(template_filepath, sheet_name = 'Results')
-        template_locations = pd.read_excel(template_filepath, sheet_name = 'Locations')
-        template_activities = pd.read_excel(template_filepath, sheet_name = 'Activities')
-        nutrients = pd.read_excel(source_filepath)
+        
         
         # procedure
         try:
+            self.template_results = pd.read_excel(template_filepath, sheet_name = 'Results')
+            self.template_locations = pd.read_excel(template_filepath, sheet_name = 'Locations')
+            self.template_activities = pd.read_excel(template_filepath, sheet_name = 'Activities')
+            self.nutrients = pd.read_excel(source_filepath)
             self.edd_results = self._get_results()
             self.edd_locations = self._get_locations()
             self.edd_activities = self._get_activities()
@@ -81,7 +82,7 @@ class Edd():
         # protected method, not intended to be called directly
         pass
     
-    def _get_activites(self):
+    def _get_activities(self):
         '''Parse `source` nutrients xlsx into EDD activite.'''
         
         # protected method, not intended to be called directly
