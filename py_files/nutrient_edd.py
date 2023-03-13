@@ -84,30 +84,78 @@ class Edd():
         df = pd.merge(df, self.loc_lookup, how = 'left', on = 'Location_ID') # left-join
         
         # fill processed data into template
-        edd_results = pd.DataFrame(columns = self.template_results.columns, index = range(df.shape[0])) # empty df to receive data
-        edd_results["#Org_Code"] = 'NCRN'
-        edd_results["Activity_ID"] = df["dummy"]
-        edd_results["Characteristic_Name"] = 'Perennial stream water monitoring'
-        edd_results["Method_Speciation"] = df["Parameter"]
-        edd_results["Result_Text"] = df["Result"]
-        edd_results["Result_Unit"] = df["Unit"]
-        edd_results["Result_Status"] = 'Final'
-        edd_results["Result_Type"] = 'Actual'
-        edd_results["Result_Comment"] = df["Comments"]
-        edd_results["Result_Sampling_Point_Name"] = df["Location_Name"]
-        edd_results["Analysis_Start_Date"] = df["Analysis Date"].dt.strftime('%Y-%m-%d')
-        edd_results["Analysis_Start_Time_Zone"] = 'Eastern Time - Washington, DC'
+        edd = pd.DataFrame(columns = self.template_results.columns, index = range(df.shape[0])) # empty df to receive data
+        edd["#Org_Code"] = 'NCRN'
+        edd["Activity_ID"] = df["dummy"]
+        edd["Characteristic_Name"] = 'Perennial stream water monitoring'
+        edd["Method_Speciation"] = df["Parameter"]
+        edd["Result_Text"] = df["Result"]
+        edd["Result_Unit"] = df["Unit"]
+        edd["Result_Status"] = 'Final'
+        edd["Result_Type"] = 'Actual'
+        edd["Result_Comment"] = df["Comments"]
+        edd["Result_Sampling_Point_Name"] = df["Location_Name"]
+        edd["Analysis_Start_Date"] = df["Analysis Date"].dt.strftime('%Y-%m-%d')
+        edd["Analysis_Start_Time_Zone"] = 'Eastern Time - Washington, DC'
 
-        edd_results = edd_results.fillna('')
+        edd = edd.fillna('')
         
-        return edd_results
+        return edd
         
     def _get_locations(self):
         '''Parse `source` nutrients xlsx into EDD locations.'''
         
         # protected method, not intended to be called directly
-        pass
-    
+        
+        # process data into flat form where one row is one 'result'
+        df = self.nutrients.copy()
+        df["Location_ID"] = df["Sample ID"].replace('_DUP', '', regex = True) # get rid of the _DUP suffix so we can match on location ID
+        df["park_code"] = df["Location_ID"].str[5:9]
+        df = df.drop_duplicates('Location_ID')
+        df = pd.merge(df, self.loc_lookup, how = 'left', on = 'Location_ID') # left-join
+        
+        # fill processed data into template
+        edd = pd.DataFrame(columns = self.template_locations.columns)
+        edd["#Org_Code"] = df["Location_ID"].str[:4]
+        edd["Park_Code"] = df["park_code"]
+        edd["Location_ID"] = df["Location_ID"]
+        edd["Location_Name"] = df["Location_Name"]
+        edd["Location_Type"] = df["Location_Type"]
+        edd["Latitude"] = df["Latitude"]
+        edd["Longitude"] = df["Longitude"]
+        edd["Lat_Lon_Method"] = 'GPS-Unspecified'
+        edd["Lat_Lon_Datum"] = df["Lat_Lon_Datum"]
+        edd["Location_Description"] = df["Location_Description"]
+        edd["Travel_Directions"] = df["Travel_Directions"]
+        edd["HUC8_Code"] = df["HUC8_Code"]
+        edd["HUC12_Code"] = df["HUC12_Code"]
+        edd["Alternate_Location_ID"] = df["Alternate_Location_ID"]
+        edd["Alternate_Location_ID_Context"] = df["Alternate_Location_ID_Context"]
+        edd["Elevation"] = df["Elevation"]
+        edd["Elevation_Unit"] = df["Elevation_Unit"]
+        edd["Elevation_Method"] = df["Elevation_Method"]
+        edd["Elevation_Datum"] = df["Elevation_Datum"]
+        edd["Elevation_Accuracy"] = df["Elevation_Accuracy"]
+        edd["Elevation_Accuracy_Unit"] = df["Elevation_Accuracy_Unit"]
+        edd["Country_Code"] = df["Country_Code"]
+        edd["State_Code"] = df["State_Code"]
+        edd["County_Name"] = df["County_Name"]
+        edd["Drainage_Area"] = df["Drainage_Area"]
+        edd["Drainage_Area_Unit"] = df["Drainage_Area_Unit"]
+        edd["Contributing_Area"] = df["Contributing_Area"]
+        edd["Contributing_Area_Unit"] = df["Contributing_Area_Unit"]
+        edd["Tribal_Land_Indicator"] = df["Tribal_Land_Indicator"]
+        edd["Tribal_Land_Name"] = df["Tribal_Land_Name"]
+        edd["Well_ID"] = df["Well_ID"]
+        edd["Well_Type"] = df["Well_Type"]
+        edd["Aquifer_Name"] = df["Aquifer_Name"]
+        edd["Formation_Type"] = df["Formation_Type"]
+        edd["Well_Hole_Depth"] = df["Well_Hole_Depth"]
+        edd["Well_Hole_Depth_Unit"] = df["Well_Hole_Depth_Unit"]
+        edd["Well_Status"] = df["Well_Status"]
+        
+        return edd
+
     def _get_activities(self):
         '''Parse `source` nutrients xlsx into EDD activite.'''
         
